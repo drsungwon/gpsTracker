@@ -19,7 +19,8 @@
 var app = {
 
     // Application Constructor
-    initialize: function() {
+    initialize: function() 
+    {
         document.addEventListener('deviceready', this.onDeviceReady.bind(this), false);
 
         var buttonOperationMode = document.getElementById('btn-operation-mode');
@@ -35,31 +36,61 @@ var app = {
     //
     // Bind any cordova events here. Common events are:
     // 'pause', 'resume', etc.
-    onDeviceReady: function() {
+    onDeviceReady: function() 
+    {
         this.receivedEvent('deviceready');
     },
 
-    updateOperationMode: function() {
+    updateOperationMode: function() 
+    {
         var buttonOperationMode = document.getElementById('btn-operation-mode');
         var statusBar = document.getElementById('status-bar');
         var loggedTime = 1;
 
         console.log(buttonOperationMode.innerText);
 
-        function logTimerFunction() {
+        function logTimerFunction() 
+        {
             var statusBar = document.getElementById('status-bar');     
             statusBar.textContent = loggedTime;
             loggedTime += 1;
         }
 
-        if(buttonOperationMode.innerText == "START") {
+        var logOb = false;
+
+        function writeLog(str) {
+            if(!logOb) return;
+            var log = str + " [" + (new Date()) + "]\n";
+            console.log("going to log "+log);
+            logOb.createWriter(function(fileWriter) {
+                
+                fileWriter.seek(fileWriter.length);
+                
+                var blob = new Blob([log], {type:'text/plain'});
+                fileWriter.write(blob);
+                console.log("ok, in theory i worked");
+            }, fail);
+        }
+
+        if(buttonOperationMode.innerText == "START") 
+        {
             buttonOperationMode.innerText = "STOP";
             statusBar.textContent = 'Logging started.';
 
             const timerClock = setInterval(logTimerFunction, 1000);
             localStorage.setItem("logTimer", timerClock);
+
+            window.resolveLocalFileSystemURL(cordova.file.dataDirectory, function(dir) {
+                alert("got main dir" + dir);
+                dir.getFile("log.txt", {create:true, exclusive:false}, function(file) {
+                    console.log("got the file", file);
+                    logOb = file;
+                    writeLog("App started");			
+                });
+            });
         }         
-        else {
+        else 
+        {
             buttonOperationMode.innerText = "START";
             statusBar.textContent = 'Logging stoped.';
 
@@ -68,16 +99,27 @@ var app = {
         };
     },
 
-    configureProgram: function() {
+    configureProgram: function() 
+    {
         alert("configureProgram()");
     },
 
-    reportLogFile: function() {
-        alert("reportLogFile()");
+    reportLogFile: function() 
+    {
+        var emailAddress = prompt("Email to send:");
+        var response = confirm("Send log file to " + emailAddress);
+
+        logBody = "Send log file to " + emailAddress;
+        
+        if(response == true)
+        {
+            window.open('mailto:' + emailAddress + '?subject=Log file from GPS Tracker&body=' + logBody);
+        }
     },
 
     // Update DOM on a Received Event
-    receivedEvent: function(id) {
+    receivedEvent: function(id) 
+    {
         var parentElement = document.getElementById(id);
         var listeningElement = parentElement.querySelector('.listening');
         var receivedElement = parentElement.querySelector('.received');
