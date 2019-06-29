@@ -17,7 +17,7 @@
     specific language governing permissions and limitations
     under the License.
 -->
-<html>
+<html lang = "ko">
     <head>
         <!--
         Customize this policy to fit your own app's needs. For more guidance, see:
@@ -28,30 +28,153 @@
             * Disables use of inline scripts in order to mitigate risk of XSS vulnerabilities. To change this:
                 * Enable inline JS: add 'unsafe-inline' to default-src
         -->
+        <!-- Cordova 
         <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;">
         <meta name="format-detection" content="telephone=no">
         <meta name="msapplication-tap-highlight" content="no">
         <meta name="viewport" content="initial-scale=1, width=device-width, viewport-fit=cover">
         <link rel="stylesheet" type="text/css" href="css/index.css">
-        <title>Hello World</title>
+        -->
+
+        <!-- Jquery Mobile -->
+        <meta charset="UTF-8">
+        <title>gspTracker</title>
+	    <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
+        <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+        <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+
+        <style>
+            table, td {
+            border: 1px solid black;
+            }
+        </style>
     </head>
     <body>
         <div class="app">
-            <h1>Apache Cordova</h1>
-            <div id="deviceready" class="blink">
-                <p class="event listening">Connecting to Device</p>
-                <p class="event received">Device is Ready</p>
+            <div data-role="page" id="index" data-theme="a">
+                <div data-role="header" data-theme="a">
+                    <h1>gpsTracker v1.0</h1>
+                </div>
+                <div data-role="content">
+                    <ul data-role="listview" data-theme="a" data-inset="true">
+                        <li data-role="list-divider" text-align: center>
+                            <h3> Menu </h3>
+                        </li>
+                        <li> <a href="#configure">
+                            <h3>Configure Program</h3>
+                        </a></li>
+                        <li> <a href="#view">
+                            <h3>View Log</h3>
+                        </a></li>                    
+                        <li> <a href="#report">
+                            <h3>Report Log</h3>
+                        </a></li>
+                        <li> <a href="#about">
+                            <h3>About Program</h3>
+                        </a></li>
+                        <li data-role="list-divider" id="deviceready" class="blink">
+                            <p class="event listening">Connecting to Device</p>
+                            <p class="event received" id="status-bar">Device is Ready</p>
+                        </li>
+                    </ul>
+                </div>
+                <div data-role="footer" data-theme="a">
+                    <h1>All rights reserved to drsungwon@khu.ac.kr</h1>
+                </div>
             </div>
-            <div>
-                <p id="status-bar">Program started.</p>
-                <p></p>
-                <button class="button-styled" id="btn-operation-mode">START</button>
-                <p></p>
-                <button class="button-styled" id="btn-configure">CONFIGURE</button>
-                <p></p>
-                <button class="button-styled" id="btn-report">REPORT</button>
-                <p></p>
-            </div>         
+
+            <div data-role="page" id="configure" data-theme="a">
+                <div data-role="header" data-theme="a">
+                    <a href="#index" data-icon="back" data-direction="reverse"> Back</a>
+                    <h1>Configure</h1>
+                </div>
+                <div data-role="content">
+                    <form>
+                        <div data-role="ui-field-contain">
+                            <label for="opmode">GPS Traking:</label>
+                            <select name="opmode" id="opmode" data-role="slider">
+                                <option value="off">Off</option>
+                                <option value="on">On</option>
+                            </select>
+                        </div>
+                        <div data-role="ui-field-contain">
+                            <label for="slider">Tracking Interval (minute):</label>
+                            <input type="range" name="slider" id="slider" value="5" min="0" max="10">
+                        </div>
+                        <div data-role="ui-field-contain">
+                            <label for="email">Report Email Address:</label>
+                            <input type="email" data-clear-btn="true" name="email" id="email" value="">                        
+                        </div>
+                        <div data-role="ui-field-contain">
+                            <input type="button" value="Set Configuration" data-theme="a" data-icon="check" id="btn-configure">
+                        </div>
+                        <div data-role="ui-field-contain">
+                            <input type="button" value="Remove Log" data-theme="a" data-icon="check" id="btn-reset">
+                        </div>
+                    </form>
+                </div>
+                <div data-role="footer" data-theme="a">
+                    <h1>All rights reserved to drsungwon@khu.ac.kr</h1>
+                </div>
+            </div>
+
+            <div data-role="page" id="view" data-theme="a">
+                <div data-role="header" data-theme="a">
+                    <a href="#index" data-icon="back" data-direction="reverse"> Back</a>
+                    <h1>View Log</h1>
+                </div>
+                <div data-role="content">
+                    <form>
+                        <table id="logTable">
+                        </table>
+                        <p id="logMessage">
+                        </p>
+                        <div data-role="ui-field-contain">
+                            <input type="button" value="Load Log" data-theme="a" data-icon="check" id="btn-loadlog">
+                        </div>
+                    </form>
+                </div>
+                <div data-role="footer" data-theme="a">
+                    <h1>All rights reserved to drsungwon@khu.ac.kr</h1>
+                </div>
+            </div>
+
+            <div data-role="page" id="report" data-theme="a">
+                <div data-role="header" data-theme="a">
+                    <a href="#index" data-icon="back" data-direction="reverse"> Back</a>
+                    <h1>Report Log</h1>
+                </div>
+                <div data-role="content">
+                    <form>
+                        <div class="ui-field-contain">
+                            <label for="reportEmail">Report to:</label>
+                            <input type="email" data-clear-btn="true" name="reportEmail" id="reportEmail" value="">                        
+                        </div>
+                        <div class="ui-field-contain">
+                            <input type="button" value="Submit" data-theme="a" data-icon="check" id="btn-report">
+                         </div>
+                   </form>
+                </div>
+                <div data-role="footer" data-theme="a">
+                    <h1>All rights reserved to drsungwon@khu.ac.kr</h1>
+                </div>
+            </div>
+
+            <div data-role="page" id="about" data-theme="a">
+                <div data-role="header" data-theme="a">
+                    <a href="#index" data-icon="back" data-direction="reverse"> Back</a>
+                    <h1>About Program</h1>
+                </div>
+                <div data-role="content">
+                    <form>
+
+                    </form>
+                </div>
+                <div data-role="footer" data-theme="a">
+                    <h1>All rights reserved to drsungwon@khu.ac.kr</h1>
+                </div>
+            </div>
         </div>
         <script type="text/javascript" src="cordova.js"></script>
         <script type="text/javascript" src="js/index.js"></script>
