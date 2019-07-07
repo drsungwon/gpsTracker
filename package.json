@@ -13,6 +13,7 @@
     "author": "Apache Cordova Team",
     "license": "Apache-2.0",
     "dependencies": {
+        "@mauron85/cordova-plugin-background-geolocation": "^3.0.3",
         "cordova-android": "^8.0.0",
         "cordova-browser": "^6.0.0",
         "cordova-plugin-dialogs": "^2.0.1",
