@@ -1,3 +1,5 @@
+// Action: jshint 설치!! 
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -88,6 +90,7 @@ var app = {
          
         var statusBar = document.getElementById('status-bar');
         var loggedTime = 0;
+        var timerClock = 0;
 
         localStorage.setItem("conf_operation_mode", conf_operation_mode.value);
         localStorage.setItem("conf_tracking_interval", conf_tracking_interval.value);
@@ -98,12 +101,12 @@ var app = {
             var statusBar = document.getElementById('status-bar');     
 
             var currentdate = new Date(); 
-            var datetime =  currentdate.getFullYear() + "/" 
-                            + (currentdate.getMonth()+1) + "/" 
-                            + currentdate.getDate() + " "
-                            + currentdate.getHours() + ":"  
-                            + currentdate.getMinutes() + ":" 
-                            + currentdate.getSeconds();
+            var datetime =  currentdate.getFullYear() + "/" +
+                            (currentdate.getMonth() + 1) + "/" +
+                            currentdate.getDate() + " " +
+                            currentdate.getHours() + ":" +
+                            currentdate.getMinutes() + ":" +
+                            currentdate.getSeconds();
     
             // onSuccess Callback
             // This method accepts a Position object, which contains the
@@ -122,27 +125,27 @@ var app = {
                     var eSpeed = String(position.coords.speed);
                     var eTimestamp = String(position.timestamp);
 
-                    var eSqlMsg = 'INSERT INTO GPSTABLE (id, LogTime, Latitude, Longitude, Altitude, Accuracy, AltitudeAccuracy, Heading, Speed, Timestamp) VALUES ('
-                                    + eId 
-                                    + ',\"' 
-                                    + eLogTime 
-                                    + '\",\"' 
-                                    + eLatitude 
-                                    + '\",\"' 
-                                    + eLongitude 
-                                    + '\",\"' 
-                                    + eAltitude 
-                                    + '\",\"' 
-                                    + eAccuracy 
-                                    + '\",\"' 
-                                    + eAltitudeAccuracy 
-                                    + '\",\"' 
-                                    + eHeading 
-                                    + '\",\"' 
-                                    + eSpeed 
-                                    + '\",\"' 
-                                    + eTimestamp 
-                                    + '\")';
+                    var eSqlMsg = 'INSERT INTO GPSTABLE (id, LogTime, Latitude, Longitude, Altitude, Accuracy, AltitudeAccuracy, Heading, Speed, Timestamp) VALUES (' +
+                                    eId +
+                                    ',\"' +
+                                    eLogTime +
+                                    '\",\"' +
+                                    eLatitude +
+                                    '\",\"' +
+                                    eLongitude +
+                                    '\",\"' +
+                                    eAltitude +
+                                    '\",\"' +
+                                    eAccuracy +
+                                    '\",\"' +
+                                    eAltitudeAccuracy +
+                                    '\",\"' +
+                                    eHeading +
+                                    '\",\"' +
+                                    eSpeed +
+                                    '\",\"' +
+                                    eTimestamp +
+                                    '\")';
 
                     tx.executeSql(eSqlMsg); 
                 });
@@ -166,7 +169,7 @@ var app = {
         {
             statusBar.textContent = 'Logging started.';
 
-            const timerClock = setInterval(logTimerFunction, 1000 * 60 * conf_tracking_interval.value);
+            timerClock = setInterval(logTimerFunction, 1000 * 60 * conf_tracking_interval.value);
             localStorage.setItem("logTimer", timerClock);
         }
         else
@@ -175,7 +178,7 @@ var app = {
 
             timerClock = localStorage.getItem("logTimer");
             clearInterval(timerClock);
-        };
+        }
     },
 
     loadLogFile: function() 
@@ -204,7 +207,7 @@ var app = {
                     titleCell4.innerHTML = 'Longitude';   
                 }
                 else{
-                    tableStatus.innerHTML = "No log."
+                    tableStatus.innerHTML = "No log.";
                 }
 
                 for(var i = 0; i < result.rows.length; i++){
@@ -216,10 +219,10 @@ var app = {
                     var cell3 = tableRow.insertCell(2);
                     var cell4 = tableRow.insertCell(3);
 
-                    cell1.innerHTML = row['id'];
-                    cell2.innerHTML = row['LogTime'];
-                    cell3.innerHTML = row['Latitude'];
-                    cell4.innerHTML = row['Longitude'];
+                    cell1.innerHTML = row.id;
+                    cell2.innerHTML = row.LogTime;
+                    cell3.innerHTML = row.Latitude;
+                    cell4.innerHTML = row.Longitude;
                 }            
             });
         });
@@ -243,21 +246,21 @@ var app = {
 
         console.log('Received Event: ' + id);
         
-        var ls_operation_mode_value = localStorage.setItem("conf_operation_mode");
+        var ls_operation_mode_value = localStorage.getItem("conf_operation_mode");
         if(ls_operation_mode_value != null)
         {
             var conf_operation_mode = document.getElementById('opmode');
             conf_operation_mode.value = ls_operation_mode_value;
         }
 
-        var ls_tracking_interval_value = localStorage.setItem("conf_tracking_interval");
+        var ls_tracking_interval_value = localStorage.getItem("conf_tracking_interval");
         if(ls_tracking_interval_value != null)
         {
             var conf_tracking_interval = document.getElementById('slider');
             conf_tracking_interval.value = ls_tracking_interval_value;
         }
 
-        var ls_report_email_value = localStorage.setItem("conf_report_email");
+        var ls_report_email_value = localStorage.getItem("conf_report_email");
         if(ls_report_email_value != null)
         {
             var conf_report_email = document.getElementById('email');
