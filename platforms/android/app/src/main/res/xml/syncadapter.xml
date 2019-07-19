@@ -1,0 +1,2 @@
+<?xml version='1.0' encoding='utf-8'?>
+<sync-adapter android:accountType="@string/mauron85_bgloc_account_type" android:allowParallelSyncs="false" android:contentAuthority="@string/mauron85_bgloc_content_authority" android:isAlwaysSyncable="true" android:supportsUploading="true" android:userVisible="false" xmlns:android="http://schemas.android.com/apk/res/android" />

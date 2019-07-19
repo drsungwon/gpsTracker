@@ -3,4 +3,7 @@
     <string name="app_name">gpsTracker</string>
     <string name="launcher_name">@string/app_name</string>
     <string name="activity_name">@string/launcher_name</string>
+    <string name="mauron85_bgloc_account_name">@string/app_name</string>
+    <string name="mauron85_bgloc_account_type">io.cordova.gpsTracker.account</string>
+    <string name="mauron85_bgloc_content_authority">io.cordova.gpsTracker</string>
 </resources>
