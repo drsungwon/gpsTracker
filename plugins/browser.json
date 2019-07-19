@@ -18,9 +18,6 @@
     },
     "cordova-plugin-geolocation": {
       "PACKAGE_NAME": "io.cordova.hellocordova"
-    },
-    "cordova-plugin-mauron85-background-geolocation": {
-      "PACKAGE_NAME": "io.cordova.gpsTracker"
     }
   },
   "dependent_plugins": {}
