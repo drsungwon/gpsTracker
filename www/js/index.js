@@ -72,12 +72,12 @@ var app = {
         this.receivedEvent('deviceready');
     },
 
-    resetProgram: function() 
+    resetProgram: function()
     {
         db.transaction(clearDB, errorCB, successCB);
     },
 
-    configureProgram: function() 
+    configureProgram: function()
     {
         var conf_operation_mode = document.getElementById('opmode');
         var conf_tracking_interval = document.getElementById('slider');
@@ -85,7 +85,7 @@ var app = {
 
         var report_email = document.getElementById('reportEmail');
         report_email.value = conf_report_email.value;
-         
+
         var statusBar = document.getElementById('status-bar');
         var loggedTime = 0;
         var timerClock = 0;
@@ -94,18 +94,18 @@ var app = {
         localStorage.setItem("conf_tracking_interval", conf_tracking_interval.value);
         localStorage.setItem("conf_report_email", conf_report_email.value);
 
-        function logTimerFunction() 
+        function logTimerFunction()
         {
-            var statusBar = document.getElementById('status-bar');     
+            var statusBar = document.getElementById('status-bar');
 
-            var currentdate = new Date(); 
+            var currentdate = new Date();
             var datetime =  currentdate.getFullYear() + "/" +
                             (currentdate.getMonth() + 1) + "/" +
                             currentdate.getDate() + " " +
                             currentdate.getHours() + ":" +
                             currentdate.getMinutes() + ":" +
                             currentdate.getSeconds();
-    
+
             // onSuccess Callback
             // This method accepts a Position object, which contains the
             // current GPS coordinates
@@ -145,7 +145,7 @@ var app = {
                                     eTimestamp +
                                     '\")';
 
-                    tx.executeSql(eSqlMsg); 
+                    tx.executeSql(eSqlMsg);
                 });
             };
 
@@ -156,9 +156,9 @@ var app = {
             }
 
             navigator.geolocation.getCurrentPosition(onGpsSuccess, onGpsError);
-            
+
             var msg = 'Lastest Log: ' + datetime + ' (' + (loggedTime + 1) + ' times)' ;
-    
+
             statusBar.textContent = msg;
             loggedTime += 1;
         }
@@ -179,7 +179,7 @@ var app = {
         }
     },
 
-    loadLogFile: function() 
+    loadLogFile: function()
     {
         var table = document.getElementById("logTable");
         var tableStatus = document.getElementById("logMessage");
@@ -195,14 +195,14 @@ var app = {
                     var titleRow = table.insertRow(0);
 
                     var titleCell1 = titleRow.insertCell(0);
-                    var titleCell2 = titleRow.insertCell(1); 
+                    var titleCell2 = titleRow.insertCell(1);
                     var titleCell3 = titleRow.insertCell(2);
-                    var titleCell4 = titleRow.insertCell(3);   
-            
+                    var titleCell4 = titleRow.insertCell(3);
+
                     titleCell1.innerHTML = 'No';
                     titleCell2.innerHTML = 'Time';
                     titleCell3.innerHTML = 'Latitude';
-                    titleCell4.innerHTML = 'Longitude';   
+                    titleCell4.innerHTML = 'Longitude';
                 }
                 else{
                     tableStatus.innerHTML = "No log.";
@@ -221,12 +221,12 @@ var app = {
                     cell2.innerHTML = row.LogTime;
                     cell3.innerHTML = row.Latitude;
                     cell4.innerHTML = row.Longitude;
-                }            
+                }
             });
         });
     },
 
-    reportLogFile: function() 
+    reportLogFile: function()
     {
         var report_email = document.getElementById('reportEmail');
         var sendMsg = "send email to " + report_email.value;
@@ -243,7 +243,7 @@ var app = {
         receivedElement.setAttribute('style', 'display:block;');
 
         console.log('Received Event: ' + id);
-        
+
         var ls_operation_mode_value = localStorage.getItem("conf_operation_mode");
         if(ls_operation_mode_value != null)
         {
