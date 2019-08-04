@@ -17,220 +17,153 @@
  * under the License.
  */
 
-// Reference: https://cordova.apache.org/docs/ko/latest/cordova/storage/database/database.html
-var db = window.openDatabase("Database", "1.0", "GPS Tracking", 2000000);
-db.transaction(populateDB, errorCB, successCB);
+var debugLogging = function (message) {
+    var tableStatusBody = document.getElementById("logMessageBody");
+    tableStatusBody.innerHTML += message;
+    tableStatusBody.innerHTML += "<br>";
+};
 
-// Populate the database
-//
-function populateDB(tx) {
-    tx.executeSql('DROP TABLE IF EXISTS GPSTABLE');
-    tx.executeSql('CREATE TABLE IF NOT EXISTS GPSTABLE (id unique, LogTime, Latitude, Longitude, Altitude, Accuracy, AltitudeAccuracy, Heading, Speed, Timestamp)');
-}
+// Background module handlwer
+var backgroundModuleHandler = 0;
 
-// Clear the database
-//
-function clearDB(tx) {
-    tx.executeSql('DELETE FROM GPSTABLE');
-}
+/* part3_for_websocket */
 
-// Transaction error callback
-//
-function errorCB(tx, err) {
-    alert("Log File Open Error: " + err);
-}
+// Web SQL based database for geolocation writing
+var dbManager = {
+    initialize: function () {
+        this.db = window.openDatabase("Database", "1.0", "GPS Tracking", 2000000);
+        this.db.transaction(this.populateDB, this.errorCB, this.successCB);
+        console.log('dbManager.initialize()');
+    },
 
-// Transaction success callback
-//
-function successCB() {
-//    alert("Success processing SQL!");
-}
+    // Populate the database
+    populateDB: function (tx) {
+        tx.executeSql('CREATE TABLE IF NOT EXISTS GPSTABLE (LogTime unique, Latitude, Longitude, Altitude, Accuracy, AltitudeAccuracy, Heading, Speed, Timestamp)');
+        console.log('CREATE TABLE IF NOT EXISTS GPSTABLE (LogTime unique, Latitude, Longitude, Altitude, Accuracy, AltitudeAccuracy, Heading, Speed, Timestamp)');
+    },
 
+    // Clear the database
+    clearDB: function () {
+        this.db.transaction(function (tx) {
+            tx.executeSql('DELETE FROM GPSTABLE');
+            console.log('DELETE FROM GPSTABLE');
+        });
+    },
+
+    // Write the database
+    writeDB: function (sqlRequest) {
+        this.db.transaction(function(tx){
+            tx.executeSql(sqlRequest);
+            console.log(sqlRequest);
+        });
+    },
+
+    // Transaction error callback
+    errorCB: function (tx, err) {
+        console.log("Log SQL File Open Error: " + err);
+    },
+
+    // Transaction success callback
+    successCB: function () {
+        console.log("Success processing SQL!");
+    }
+};
+
+var pad = function (n, width) {
+    n = n + '';
+    return n.length >= width ? n : new Array(width - n.length + 1).join('0') + n;
+};
+
+// main application
 var app = {
     // Application Constructor
     initialize: function() {
         document.addEventListener('deviceready', this.onDeviceReady.bind(this), false);
 
-        var buttonConfigure = document.getElementById('btn-configure');
-        buttonConfigure.addEventListener('click', this.configureProgram.bind(this));
+        // Button event handler binding : Program configuration
+        btnProgramConfiguration = document.getElementById('buttonProgramConfiguation');
+        btnProgramConfiguration.addEventListener('click', this.doProgramConfiguration.bind(this));
 
-        var buttonReport = document.getElementById('btn-report');
-        buttonReport.addEventListener('click', this.reportLogFile.bind(this));
+        // Button event handler binding : Log removal
+        btnLogRemoval = document.getElementById('buttonLogRemoval');
+        btnLogRemoval.addEventListener('click', this.doLogRemoval.bind(this));
 
-        var buttonLoadLog = document.getElementById('btn-loadlog');
-        buttonLoadLog.addEventListener('click', this.loadLogFile.bind(this));
+        // Button event handler binding : Log loading
+        btnLogLoading = document.getElementById('buttonLogLoading');
+        btnLogLoading.addEventListener('click', this.doLogLoading.bind(this));
 
-        var buttonReset = document.getElementById('btn-reset');
-        buttonReset.addEventListener('click', this.resetProgram.bind(this));
+        // Clear background process as Idle
+        localStorage.setItem("LOG_TIMER", -1);
+
+        // Create and initialize database
+        dbManager.initialize();
     },
 
-    // deviceready Event Handler
-    //
-    // Bind any cordova events here. Common events are:
-    // 'pause', 'resume', etc.
+    // Deviceready Event Handler : Bind any cordova events here. Common events are - 'pause', 'resume', etc.
     onDeviceReady: function() {
         this.receivedEvent('deviceready');
-    },
 
-    resetProgram: function()
-    {
-        db.transaction(clearDB, errorCB, successCB);
-    },
+        /* part1_for_backgound */
 
-    configureProgram: function()
-    {
-        var conf_operation_mode = document.getElementById('opmode');
-        var conf_tracking_interval = document.getElementById('slider');
-        var conf_report_email = document.getElementById('email');
-
-        var report_email = document.getElementById('reportEmail');
-        report_email.value = conf_report_email.value;
-
-        var statusBar = document.getElementById('status-bar');
-        var loggedTime = 0;
-        var timerClock = 0;
-
-        localStorage.setItem("conf_operation_mode", conf_operation_mode.value);
-        localStorage.setItem("conf_tracking_interval", conf_tracking_interval.value);
-        localStorage.setItem("conf_report_email", conf_report_email.value);
-
-        function logTimerFunction()
-        {
-            var statusBar = document.getElementById('status-bar');
-
-            var currentdate = new Date();
-            var datetime =  currentdate.getFullYear() + "/" +
-                            (currentdate.getMonth() + 1) + "/" +
-                            currentdate.getDate() + " " +
-                            currentdate.getHours() + ":" +
-                            currentdate.getMinutes() + ":" +
-                            currentdate.getSeconds();
-
-            // onSuccess Callback
-            // This method accepts a Position object, which contains the
-            // current GPS coordinates
-            //
-            var onGpsSuccess = function(position) {
-                db.transaction(function (tx) {
-                    var eId = String(loggedTime);
-                    var eLogTime = String(datetime);
-                    var eLatitude = String(position.coords.latitude);
-                    var eLongitude = String(position.coords.longitude);
-                    var eAltitude = String(position.coords.altitude);
-                    var eAccuracy = String(position.coords.accuracy);
-                    var eAltitudeAccuracy = String(position.coords.altitudeAccuracy);
-                    var eHeading = String(position.coords.heading);
-                    var eSpeed = String(position.coords.speed);
-                    var eTimestamp = String(position.timestamp);
-
-                    var eSqlMsg = 'INSERT INTO GPSTABLE (id, LogTime, Latitude, Longitude, Altitude, Accuracy, AltitudeAccuracy, Heading, Speed, Timestamp) VALUES (' +
-                                    eId +
-                                    ',\"' +
-                                    eLogTime +
-                                    '\",\"' +
-                                    eLatitude +
-                                    '\",\"' +
-                                    eLongitude +
-                                    '\",\"' +
-                                    eAltitude +
-                                    '\",\"' +
-                                    eAccuracy +
-                                    '\",\"' +
-                                    eAltitudeAccuracy +
-                                    '\",\"' +
-                                    eHeading +
-                                    '\",\"' +
-                                    eSpeed +
-                                    '\",\"' +
-                                    eTimestamp +
-                                    '\")';
-
-                    tx.executeSql(eSqlMsg);
-                });
-            };
-
-            // onError Callback receives a PositionError object
-            //
-            function onGpsError(error) {
-                alert('code: ' + error.code + '\n' + 'message: ' + error.message + '\n');
-            }
-
-            navigator.geolocation.getCurrentPosition(onGpsSuccess, onGpsError);
-
-            var msg = 'Lastest Log: ' + datetime + ' (' + (loggedTime + 1) + ' times)' ;
-
-            statusBar.textContent = msg;
-            loggedTime += 1;
-        }
-
-        if(conf_operation_mode.value == "on")
-        {
-            statusBar.textContent = 'Logging started.';
-
-            timerClock = setInterval(logTimerFunction, 1000 * 60 * conf_tracking_interval.value);
-            localStorage.setItem("logTimer", timerClock);
-        }
-        else
-        {
-            statusBar.textContent = 'Logging stoped.';
-
-            timerClock = localStorage.getItem("logTimer");
-            clearInterval(timerClock);
-        }
-    },
-
-    loadLogFile: function()
-    {
-        var table = document.getElementById("logTable");
-        var tableStatus = document.getElementById("logMessage");
-
-        db.transaction(function(tx){
-            tx.executeSql("select * from GPSTABLE",[],
-            function(tx,result){
-                table.innerHTML = "";
-
-                if(result.rows.length > 0){
-                    tableStatus.innerHTML = "";
-
-                    var titleRow = table.insertRow(0);
-
-                    var titleCell1 = titleRow.insertCell(0);
-                    var titleCell2 = titleRow.insertCell(1);
-                    var titleCell3 = titleRow.insertCell(2);
-                    var titleCell4 = titleRow.insertCell(3);
-
-                    titleCell1.innerHTML = 'No';
-                    titleCell2.innerHTML = 'Time';
-                    titleCell3.innerHTML = 'Latitude';
-                    titleCell4.innerHTML = 'Longitude';
-                }
-                else{
-                    tableStatus.innerHTML = "No log.";
-                }
-
-                for(var i = 0; i < result.rows.length; i++){
-                    var row = result.rows.item(i);
-                    var tableRow = table.insertRow(i+1);
-
-                    var cell1 = tableRow.insertCell(0);
-                    var cell2 = tableRow.insertCell(1);
-                    var cell3 = tableRow.insertCell(2);
-                    var cell4 = tableRow.insertCell(3);
-
-                    cell1.innerHTML = row.id;
-                    cell2.innerHTML = row.LogTime;
-                    cell3.innerHTML = row.Latitude;
-                    cell4.innerHTML = row.Longitude;
-                }
-            });
+//
+// New Background Mode Operation : start 
+//
+// ref: https://github.com/katzer/cordova-plugin-background-mode
+//
+        cordova.plugins.backgroundMode.setDefaults({
+            title: "My title",
+            text: "My text"
         });
-    },
 
-    reportLogFile: function()
-    {
-        var report_email = document.getElementById('reportEmail');
-        var sendMsg = "send email to " + report_email.value;
-        alert(sendMsg);
+        cordova.plugins.backgroundMode.on('enable', function(){
+            console.log("enable");
+        });
+
+        cordova.plugins.backgroundMode.on('disable', function(){
+            console.log("disable");
+        });
+
+        cordova.plugins.backgroundMode.on('activate', function() {
+            cordova.plugins.backgroundMode.disableWebViewOptimizations();
+            cordova.plugins.backgroundMode.disableBatteryOptimizations();           
+
+            /*
+            console.log("cordova.plugins.backgroundMode.onactivate()");
+
+            if(backgroundModuleHandler != 0) {
+                clearInterval(backgroundModuleHandler);
+            }
+            
+            // Set an interval of 3 seconds (3000 milliseconds)
+            backgroundModuleHandler = setInterval(function () {
+
+                // The code that you want to run repeatedly
+                var currentDate = new Date();
+                var loggingDate = currentDate.getFullYear() + "." +
+                    pad((currentDate.getMonth() + 1),2) + "." +
+                    pad(currentDate.getDate(),2) + "." +
+                    pad(currentDate.getHours(),2) + "." +
+                    pad(currentDate.getMinutes(),2) + "." +
+                    pad(currentDate.getSeconds(),2);    
+
+                debugLogging("[bg]" + loggingDate);
+
+            }, 60000);
+            */
+        });
+
+        cordova.plugins.backgroundMode.on('deactivate', function() {
+            console.log("cordova.plugins.backgroundMode.ondeactivate()");
+        });
+
+        cordova.plugins.backgroundMode.on('failure', function(errorCode) {
+            console.log("cordova.plugins.backgroundMode.onfailure()");
+        });         
+        
+        cordova.plugins.backgroundMode.enable();
+//
+// New Background Mode Operation : end
+//
     },
 
     // Update DOM on a Received Event
@@ -241,138 +174,194 @@ var app = {
 
         listeningElement.setAttribute('style', 'display:none;');
         receivedElement.setAttribute('style', 'display:block;');
+    },
 
-        console.log('Received Event: ' + id);
+    backgroundTrackingHandler: function () {    
+        var timeOld = localStorage.getItem("OLD_SLOT");
+        var timeNow = Date.now();
+        var timeInterval = localStorage.getItem("TIME_INTERVAL");
 
-        var ls_operation_mode_value = localStorage.getItem("conf_operation_mode");
-        if(ls_operation_mode_value != null)
-        {
-            var conf_operation_mode = document.getElementById('opmode');
-            conf_operation_mode.value = ls_operation_mode_value;
+        if((timeNow - timeOld) >=  timeInterval) {
+            localStorage.setItem("OLD_SLOT", Date.now());
+        
+            // Retrive current date and construct format like: OOOO/OO/OO-OO:OO:OO
+            var currentDate = new Date();
+            var loggingDate = currentDate.getFullYear() + "." +
+                pad((currentDate.getMonth() + 1),2) + "." +
+                pad(currentDate.getDate(),2) + "." +
+                pad(currentDate.getHours(),2) + "." +
+                pad(currentDate.getMinutes(),2) + "." +
+                pad(currentDate.getSeconds(),2);    
+
+            // onSuccess Callback for current GPS coordinates
+            var onGpsSuccess = function (position) {
+                var eSqlMsg = 'INSERT INTO GPSTABLE (LogTime, Latitude, Longitude, Altitude, Accuracy, AltitudeAccuracy, Heading, Speed, Timestamp) VALUES (' +
+                    '\"' + 
+                    String(loggingDate) + '\",\"' +
+                    String(position.coords.latitude) + '\",\"' +
+                    String(position.coords.longitude) + '\",\"' +
+                    String(position.coords.altitude) + '\",\"' +
+                    String(position.coords.accuracy) + '\",\"' +
+                    String(position.coords.altitudeAccuracy) + '\",\"' +
+                    String(position.coords.heading) + '\",\"' +
+                    String(position.coords.speed) + '\",\"' +
+                    String(position.timestamp) + '\")';
+
+                // Write log into database
+                dbManager.writeDB(eSqlMsg);
+            };
+    
+            // onError Callback receives a PositionError object
+            var onGpsError = function (error) {
+                // Debug purpose
+                console.log("onGpsError(): " + '{code:' + error.code + '}, {message:' + error.message + '}');
+            };
+
+            // GPS location retrieval
+            navigator.geolocation.getCurrentPosition(onGpsSuccess, onGpsError);
+
+            /* part4.1_for_websocket */
         }
+    },
 
-        var ls_tracking_interval_value = localStorage.getItem("conf_tracking_interval");
-        if(ls_tracking_interval_value != null)
-        {
-            var conf_tracking_interval = document.getElementById('slider');
-            conf_tracking_interval.value = ls_tracking_interval_value;
+    // Button event handler : tracking mode and interval setup 
+    doProgramConfiguration: function() {
+        // Program configuration value retrieval
+        var cnfMode = document.getElementById('configurationMode');
+        var cnfInterval = document.getElementById('configurationInterval');
+
+        // Program statur bar retrieval
+        var statusBar = document.getElementById('status-bar');
+
+        // Background tracking handler
+        var handlerBackgroundTracking = 0;
+        var handlerBackgroundTrackingNew = 0;
+
+        var unitTime = 1000 * 60; // default : 1000 * 60 means 1 minute
+        var loggingInterval = unitTime * cnfInterval.value;
+
+/*
+ * Foreground geolocation tracking : start
+ */
+        // if background process is activated, then deactivate current background process
+        handlerBackgroundTracking = localStorage.getItem("LOG_TIMER");
+        if (handlerBackgroundTracking != -1) {
+            clearInterval(handlerBackgroundTracking);
         }
+       
+        /* part4.2_for_websocket */
 
-        var ls_report_email_value = localStorage.getItem("conf_report_email");
-        if(ls_report_email_value != null)
-        {
-            var conf_report_email = document.getElementById('email');
-            conf_report_email.value = ls_report_email_value;
+        // Activate tracking operation as a background process 
+        if (cnfMode.value == "ON") {
+            // initial call to acquire user permission for location access
+            navigator.geolocation.getCurrentPosition(function(){},function(){});
+
+//          handlerBackgroundTracking = setInterval(this.backgroundTrackingHandler, loggingInterval);
+            handlerBackgroundTracking = setInterval(this.backgroundTrackingHandler, 20000);
+            localStorage.setItem("OLD_SLOT", Date.now());
+            localStorage.setItem("TIME_INTERVAL", loggingInterval);
+
+            localStorage.setItem("LOG_TIMER", handlerBackgroundTracking);
+            statusBar.textContent = '정보수집을 시작합니다.';
+
+            /* part4.3_for_websocket */
         }
+        // Deactivate tracking operation
+        else {
+            localStorage.setItem("LOG_TIMER", -1);
+            statusBar.textContent = '정보수집을 중단합니다.';
+        }
+/* 
+ * Foreground geolocation tracking : end
+ */
+        /* part2_for_background */       
+    },
 
-        // [start]
-        // reference: https://www.npmjs.com/package/cordova-plugin-mauron85-background-geolocation
+    // Button event handler : traking log inntialization
+    doLogRemoval: function () {  
+        // HTML 엘리먼트를 초기화 합니다
+        var logManual = document.getElementById("logManual");
+        logManual.innerHTML = "수집정보 읽어오기를 실행하세요";
+        var tableStatusHead = document.getElementById("logMessageHead");
+        tableStatusHead.innerHTML = "";
+        var tableStatusStart = document.getElementById("logMessageStart");
+        tableStatusStart.innerHTML = "";
+        var tableStatusBody = document.getElementById("logMessageBody");
+        tableStatusBody.innerHTML = "";
+        var tableStatusEnd = document.getElementById("logMessageEnd");
+        tableStatusEnd.innerHTML = "";
 
-        BackgroundGeolocation.configure({
-            locationProvider: BackgroundGeolocation.ACTIVITY_PROVIDER,
-            desiredAccuracy: BackgroundGeolocation.HIGH_ACCURACY,
-            stationaryRadius: 50,
-            distanceFilter: 50,
-            notificationTitle: 'Background tracking',
-            notificationText: 'enabled',
-            debug: true,
-            interval: 10000,
-            fastestInterval: 5000,
-            activitiesInterval: 10000,
-            url: 'http://192.168.81.15:3000/location',
-            httpHeaders: {
-                'X-FOO': 'bar'
-            },
-            // customize post properties
-            postTemplate: {
-                lat: '@latitude',
-                lon: '@longitude',
-                foo: 'bar' // you can also add your own properties
-            }
-        });
+        // Clear log database
+        dbManager.clearDB();
+    },
 
-        BackgroundGeolocation.on('location', function (location) {
-            // handle your locations here
-            // to perform long running operation on iOS
-            // you need to create background task
-            BackgroundGeolocation.startTask(function (taskKey) {
-                // execute long running task
-                // eg. ajax post location
-                // IMPORTANT: task has to be ended by endTask
-                BackgroundGeolocation.endTask(taskKey);
-            });
-        });
+    // Button event handler : traking log load and view 
+    doLogLoading: function () {
+        // HTML 엘리먼트를 획득하여, 수집정보를 HTML 형태로 보여줍니다
+        var logManual = document.getElementById("logManual");
+        var tableStatusHead = document.getElementById("logMessageHead");
+        var tableStatusStart = document.getElementById("logMessageStart");
+        var tableStatusBody = document.getElementById("logMessageBody");
+        var tableStatusEnd = document.getElementById("logMessageEnd");
 
-        BackgroundGeolocation.on('stationary', function (stationaryLocation) {
-            // handle stationary locations here
-        });
+        // Database의 정보를 읽어서, 동적으로 HTML로 변환합니다
+        dbManager.db.transaction(function (tx) {
+            tx.executeSql("select * from GPSTABLE order by LogTime", [],
+                function (tx, result) {
+                    // Database가 비어 있지 않는 경우, HTML을 수집정보로 채웁니다
+                    if (result.rows.length > 0) {
+                        logManual.innerHTML = "수집정보 활용방법을 소개합니다";
+                        tableStatusHead.innerHTML = "개인 정보 보호를 위하여, 다음과 같은 방법으로, 수집한 정보를 활용 하도록 합니다.";
+                        tableStatusHead.innerHTML += " 쉬운 이해를 위하여, 수집한 정보를 스마트폰에서 이메일로 전송한 후, 컴퓨터에서 스프레드시트(예: Excel 등) 프로그램으로 확인하는 기준으로 설명합니다.<br>";
+                        tableStatusHead.innerHTML += "<br>[단계1] 아래에서 [start]와 [end]사이의 내용을 클릭하여 선택 후, 복사(copy)합니다.<br>";
+                        tableStatusHead.innerHTML += "<br>[단계2] 스마트폰에서 새로운 이메일 메시지를 생성합니다.<br>";
+                        tableStatusHead.innerHTML += "<br>[단계3] 이메일 본문에 단계1의 정보를 붙여넣기(paste) 합니다.<br>";
+                        tableStatusHead.innerHTML += "<br>[단계4] 이메일을 전송합니다.<br>";
+                        tableStatusHead.innerHTML += "<br>[단계5] 컴퓨터에서 단계3의 이메일 메시지의 내용만으로 만들어진 화일을 저장하며, 확장자를 csv로 합니다.<br>";
+                        tableStatusHead.innerHTML += "<br>[단계6] 단계5의 csv 화일을 스프레드시트 프로그램에서 읽어 들이면, 테이블 형태로 수집한 정보를 확인할 수 있습니다.<br>";
+                        tableStatusHead.innerHTML += "<br><참조> 아래 위치정보 중 null로 표기된 정보는 사용자의 스마트폰에서 제공하지 않는 정보입니다.<br>";
 
-        BackgroundGeolocation.on('error', function (error) {
-            console.log('[ERROR] BackgroundGeolocation error:', error.code, error.message);
-        });
-
-        BackgroundGeolocation.on('start', function () {
-            console.log('[INFO] BackgroundGeolocation service has been started');
-        });
-
-        BackgroundGeolocation.on('stop', function () {
-            console.log('[INFO] BackgroundGeolocation service has been stopped');
-        });
-
-        BackgroundGeolocation.on('authorization', function (status) {
-            console.log('[INFO] BackgroundGeolocation authorization status: ' + status);
-            if (status !== BackgroundGeolocation.AUTHORIZED) {
-                // we need to set delay or otherwise alert may not be shown
-                setTimeout(function () {
-                    var showSettings = confirm('App requires location tracking permission. Would you like to open app settings?');
-                    if (showSetting) {
-                        return BackgroundGeolocation.showAppSettings();
+                        tableStatusStart.innerHTML = "<br>[start]<br>";
+//                      tableStatusBody.innerHTML += "LogTime,Latitude,Longitude,Altitude,Accuracy,AltitudeAccuracy,Heading,Speed,Timestamp<br>";
+                        tableStatusBody.innerHTML = "LogTime,Latitude,Longitude,Altitude,Accuracy,AltitudeAccuracy,Heading,Speed<br>";
+                        
+                        // Create and show database in table format
+                        for (var i = 0, row = 0; i < result.rows.length; i++) {
+                            row = result.rows.item(i);
+                            tableStatusBody.innerHTML += row.LogTime;
+                            tableStatusBody.innerHTML += ",";
+                            tableStatusBody.innerHTML += row.Latitude;
+                            tableStatusBody.innerHTML += ",";
+                            tableStatusBody.innerHTML += row.Longitude;
+                            tableStatusBody.innerHTML += ",";
+                            tableStatusBody.innerHTML += row.Altitude;
+                            tableStatusBody.innerHTML += ",";
+                            tableStatusBody.innerHTML += row.Accuracy;
+                            tableStatusBody.innerHTML += ",";
+                            tableStatusBody.innerHTML += row.AltitudeAccuracy;
+                            tableStatusBody.innerHTML += ",";
+                            tableStatusBody.innerHTML += row.Heading;
+                            tableStatusBody.innerHTML += ",";
+                            tableStatusBody.innerHTML += row.Speed;
+                            /*
+                            tableStatusBody.innerHTML += ",";
+                            tableStatusBody.innerHTML += row.Timestamp;
+                            */
+                            tableStatusBody.innerHTML += "<br>";
+                        }
+                        tableStatusEnd.innerHTML = "[end]<br>";   
                     }
-                }, 1000);
-            }
+                    // Show message when database is blank
+                    else {
+                        logManual.innerHTML = "수집정보가 없습니다";
+                        tableStatusHead.innerHTML = "";
+                        tableStatusStart.innerHTML = "";
+                        tableStatusBody.innerHTML = "";
+                        tableStatusEnd.innerHTML = "";
+                    }
+                }
+            );
         });
-
-        BackgroundGeolocation.on('background', function () {
-            console.log('[INFO] App is in background');
-            // you can also reconfigure service (changes will be applied immediately)
-            BackgroundGeolocation.configure({ debug: true });
-        });
-
-        BackgroundGeolocation.on('foreground', function () {
-            console.log('[INFO] App is in foreground');
-            BackgroundGeolocation.configure({ debug: false });
-        });
-
-        BackgroundGeolocation.on('abort_requested', function () {
-            console.log('[INFO] Server responded with 285 Updates Not Required');
-
-            // Here we can decide whether we want stop the updates or not.
-            // If you've configured the server to return 285, then it means the server does not require further update.
-            // So the normal thing to do here would be to `BackgroundGeolocation.stop()`.
-            // But you might be counting on it to receive location updates in the UI, so you could just reconfigure and set `url` to null.
-        });
-
-        BackgroundGeolocation.on('http_authorization', () => {
-            console.log('[INFO] App needs to authorize the http requests');
-        });
-
-        BackgroundGeolocation.checkStatus(function (status) {
-            console.log('[INFO] BackgroundGeolocation service is running', status.isRunning);
-            console.log('[INFO] BackgroundGeolocation services enabled', status.locationServicesEnabled);
-            console.log('[INFO] BackgroundGeolocation auth status: ' + status.authorization);
-
-            // you don't need to check status before start (this is just the example)
-            if (!status.isRunning) {
-                BackgroundGeolocation.start(); //triggers start on start event
-            }
-        });
-
-        // you can also just start without checking for status
-        // BackgroundGeolocation.start();
-
-        // Don't forget to remove listeners at some point!
-        // BackgroundGeolocation.removeAllListeners();
-        // [end]
     }
 };
 
