@@ -110,57 +110,49 @@ var app = {
 //
 // ref: https://github.com/katzer/cordova-plugin-background-mode
 //
-        cordova.plugins.backgroundMode.setDefaults({
-            title: "My title",
-            text: "My text"
-        });
+        var trackingHandler = function () {
+            if(backgroundModuleHandler == 0) {        
+                backgroundModuleHandler = setInterval(function () {
+
+                    app.backgroundTrackingHandler();
+
+                }, 20000);
+            }
+        };
+
+        var trackingHandlerReset = function () {
+            trackingHandler = 0;
+        };
 
         cordova.plugins.backgroundMode.on('enable', function(){
-            console.log("enable");
+            console.log("cordova.plugins.backgroundMode.enable");  
+            trackingHandlerReset();
+            trackingHandler();
         });
 
         cordova.plugins.backgroundMode.on('disable', function(){
-            console.log("disable");
+            console.log("cordova.plugins.backgroundMode.disable");
+            clearInterval(backgroundModuleHandler);
         });
 
         cordova.plugins.backgroundMode.on('activate', function() {
             cordova.plugins.backgroundMode.disableWebViewOptimizations();
-            cordova.plugins.backgroundMode.disableBatteryOptimizations();           
+            cordova.plugins.backgroundMode.disableBatteryOptimizations();     
 
-            /*
-            console.log("cordova.plugins.backgroundMode.onactivate()");
-
-            if(backgroundModuleHandler != 0) {
-                clearInterval(backgroundModuleHandler);
-            }
-            
-            // Set an interval of 3 seconds (3000 milliseconds)
-            backgroundModuleHandler = setInterval(function () {
-
-                // The code that you want to run repeatedly
-                var currentDate = new Date();
-                var loggingDate = currentDate.getFullYear() + "." +
-                    pad((currentDate.getMonth() + 1),2) + "." +
-                    pad(currentDate.getDate(),2) + "." +
-                    pad(currentDate.getHours(),2) + "." +
-                    pad(currentDate.getMinutes(),2) + "." +
-                    pad(currentDate.getSeconds(),2);    
-
-                debugLogging("[bg]" + loggingDate);
-
-            }, 60000);
-            */
+            console.log("cordova.plugins.backgroundMode.onactivate()");     
+            trackingHandler();
         });
 
         cordova.plugins.backgroundMode.on('deactivate', function() {
             console.log("cordova.plugins.backgroundMode.ondeactivate()");
+            trackingHandler();
         });
 
         cordova.plugins.backgroundMode.on('failure', function(errorCode) {
             console.log("cordova.plugins.backgroundMode.onfailure()");
         });         
         
-        cordova.plugins.backgroundMode.enable();
+        // cordova.plugins.backgroundMode.enable();
 //
 // New Background Mode Operation : end
 //
@@ -180,6 +172,8 @@ var app = {
         var timeOld = localStorage.getItem("OLD_SLOT");
         var timeNow = Date.now();
         var timeInterval = localStorage.getItem("TIME_INTERVAL");
+
+        var statusBar = document.getElementById('status-bar');
 
         if((timeNow - timeOld) >=  timeInterval) {
             localStorage.setItem("OLD_SLOT", Date.now());
@@ -209,6 +203,8 @@ var app = {
 
                 // Write log into database
                 dbManager.writeDB(eSqlMsg);
+
+                statusBar.textContent = loggingDate + "에 정보를 수집하였습니다";
             };
     
             // onError Callback receives a PositionError object
@@ -244,10 +240,10 @@ var app = {
  * Foreground geolocation tracking : start
  */
         // if background process is activated, then deactivate current background process
-        handlerBackgroundTracking = localStorage.getItem("LOG_TIMER");
-        if (handlerBackgroundTracking != -1) {
-            clearInterval(handlerBackgroundTracking);
-        }
+//        handlerBackgroundTracking = localStorage.getItem("LOG_TIMER");
+//        if (handlerBackgroundTracking != -1) {
+//            clearInterval(handlerBackgroundTracking);
+//        }
        
         /* part4.2_for_websocket */
 
@@ -257,7 +253,7 @@ var app = {
             navigator.geolocation.getCurrentPosition(function(){},function(){});
 
 //          handlerBackgroundTracking = setInterval(this.backgroundTrackingHandler, loggingInterval);
-            handlerBackgroundTracking = setInterval(this.backgroundTrackingHandler, 20000);
+//          handlerBackgroundTracking = setInterval(this.backgroundTrackingHandler, 20000);
             localStorage.setItem("OLD_SLOT", Date.now());
             localStorage.setItem("TIME_INTERVAL", loggingInterval);
 
@@ -265,11 +261,15 @@ var app = {
             statusBar.textContent = '정보수집을 시작합니다.';
 
             /* part4.3_for_websocket */
+
+            cordova.plugins.backgroundMode.enable();
         }
         // Deactivate tracking operation
         else {
             localStorage.setItem("LOG_TIMER", -1);
             statusBar.textContent = '정보수집을 중단합니다.';
+
+            cordova.plugins.backgroundMode.disable();
         }
 /* 
  * Foreground geolocation tracking : end
