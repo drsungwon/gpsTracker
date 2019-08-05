@@ -1,0 +1,44 @@
+
+// WebSocket client module
+var webSocketClient = 0;
+
+var wsClientInitialization = function () {
+    var wsUri = 'ws://172.30.1.19:8080/';
+    var wsProtocol = 'echo-protocol';
+
+    webSocketClient = new WebSocket(wsUri, wsProtocol);
+
+    webSocketClient.onopen = function(evt) {
+        console.log('WebSocket Client Connected');
+        debugLogging('WebSocket Client Connected');
+        wsClientSendRandomNumber();
+    };
+
+    webSocketClient.onclose = function(evt) {
+        console.log('echo-protocol Connection Closed: ' + evt.code);
+        debugLogging('echo-protocol Connection Closed: ' + evt.code);
+    };
+
+    webSocketClient.onmessage = function(evt) {
+        console.log('echo-protocol Message Received: ' + evt.data);      
+        debugLogging('echo-protocol Message Received: ' + evt.data);   
+    };
+
+    webSocketClient.onerror = function(evt) {
+        console.log("Connection Error: " + error.toString());
+        debugLogging("Connection Error: " + error.toString());
+    };
+
+    debugLogging("wsClientInitialization()");
+};
+
+var wsClientSendRandomNumber = function () {
+    if (webSocketClient.readyState == WebSocket.OPEN) {
+        var number = Math.round(Math.random() * 0xFFFFFF);
+        webSocketClient.send(number.toString());
+        debugLogging("[Success] wsClientSendRandomNumber: " + number.toString());
+    }
+    else {
+        debugLogging("[Fail] wsClientSendRandomNumber.");
+    }
+};

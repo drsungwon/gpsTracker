@@ -1,0 +1,31 @@
+/*
+ * Background geolocation tracking : start
+ */
+        // if background process is activated, then deactivate current background process
+        handlerBackgroundTrackingNew = localStorage.getItem("LOG_TIMER");
+        if (handlerBackgroundTrackingNew != 0) {
+            BackgroundGeolocation.stop();
+        }
+       
+        // Activate tracking operation as a background process 
+        if (cnfMode.value == "ON") {
+            BackgroundGeolocation.configure({ interval: loggingInterval });
+            BackgroundGeolocation.start();
+
+            BackgroundGeolocation.configure({ notificationTitle: '뚜벅뚜벅 v1.0' });
+            BackgroundGeolocation.configure({ notificationText: '정보를 수집하고 있습니다' });
+
+            localStorage.setItem("LOG_TIMER", 1);
+            statusBar.textContent = '정보수집을 시작합니다.';
+        }
+        // Deactivate tracking operation
+        else {
+            localStorage.setItem("LOG_TIMER", 0);
+            statusBar.textContent = '정보수집을 중단합니다.';
+
+            BackgroundGeolocation.configure({ notificationTitle: '뚜벅뚜벅 v1.0' });
+            BackgroundGeolocation.configure({ notificationText: '정보수집을 중지하였습니다' });   
+        }
+/*
+ * Background geolocation tracking : end
+ */

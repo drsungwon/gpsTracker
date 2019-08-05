@@ -1,0 +1,19 @@
+            /* part4.1_for_websocket */
+
+            // Web socket transmission
+            wsClientSendRandomNumber();
+
+
+        /* part4.2_for_websocket */
+
+        // web socket release to re-open
+        if (webSocketClient.readyState == WebSocket.OPEN) {
+            webSocketClient.close();
+            debugLogging("web socket close for re-open");
+        }
+
+            /* part4.3_for_websocket */
+
+            // web socket establishment for periodic check
+            wsClientInitialization();
+            debugLogging("web socket activation");

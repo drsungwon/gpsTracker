@@ -1,0 +1,107 @@
+        // backgound geolocation tracking : start
+        // ref: https://github.com/mauron85/cordova-plugin-background-geolocation
+        // 
+
+        BackgroundGeolocation.configure({
+/*
+ * Customized backgound geolocation tracking operation : [1]start
+ */
+            locationProvider: BackgroundGeolocation.ACTIVITY_PROVIDER, // both
+            desiredAccuracy: BackgroundGeolocation.HIGH_ACCURACY, // both
+            stationaryRadius: 20, // both
+            distanceFilter: 5, // both
+            debug: false, // both
+            maxLocations: 100000, // both
+            stopOnTerminate: false, // both
+            fastestInterval: 10000, // Android
+            activitiesInterval: 10000, // Android
+            stopOnStillActivity: false, // Android
+            notificationsEnabled: false // Android
+/*
+ * Customized backgound geolocation tracking operation : [1]end
+ */ 
+        });
+
+        BackgroundGeolocation.on('location', function(location) {
+/*
+ * Customized backgound geolocation tracking operation : [2]start
+ */
+            // Retrive current date and construct format like: OOOO/OO/OO-OO:OO:OO
+            var currentDate = new Date();
+            var loggingDate = currentDate.getFullYear() + "." +
+                pad((currentDate.getMonth() + 1),2) + "." +
+                pad(currentDate.getDate(),2) + "." +
+                pad(currentDate.getHours(),2) + "." +
+                pad(currentDate.getMinutes(),2) + "." +
+                pad(currentDate.getSeconds(),2); 
+
+            var eSqlMsg = 'INSERT INTO GPSTABLE (LogTime, Latitude, Longitude, Altitude, Accuracy, AltitudeAccuracy, Heading, Speed, Timestamp) VALUES (' +
+                '\"' + 
+                String(loggingDate) + '\",\"' +
+                String(location.latitude) + '\",\"' +
+                String(location.longitude) + '\",\"' +
+                String(location.altitude) + '\",\"' +
+                String(location.accuracy) + '\",\"' +
+                'null' + '\",\"' +
+                'null' + '\",\"' +
+                String(location.speed) + '\",\"' +
+                String(location.time) + '\")';
+
+            // Write log into database
+            dbManager.writeDB(eSqlMsg);
+/*
+ * Customized backgound geolocation tracking operation : [2]end
+ */  
+        });
+        
+        BackgroundGeolocation.on('stationary', function(stationaryLocation) {
+            // handle stationary locations here
+            //console.log('[ERROR] BackgroundGeolocation stationary:');
+        });
+        
+        BackgroundGeolocation.on('error', function(error) {
+            //console.log('[ERROR] BackgroundGeolocation error:', error.code, error.message);
+        });
+        
+        BackgroundGeolocation.on('start', function() {
+            //console.log('[INFO] BackgroundGeolocation service has been started');
+        });
+        
+        BackgroundGeolocation.on('stop', function() {
+            //console.log('[INFO] BackgroundGeolocation service has been stopped');
+        });
+        
+        BackgroundGeolocation.on('authorization', function(status) {
+            //console.log('[INFO] BackgroundGeolocation authorization status: ' + status);
+            if (status !== BackgroundGeolocation.AUTHORIZED) {
+                // we need to set delay or otherwise alert may not be shown
+                setTimeout(function() {
+                    var showSettings = confirm('App requires location tracking permission. Would you like to open app settings?');
+                    if (showSetting) {
+                    return BackgroundGeolocation.showAppSettings();
+                    }
+                }, 1000);
+            }
+        });
+        
+        BackgroundGeolocation.on('background', function() {
+            //console.log('[INFO] App is in background');
+
+            // you can also reconfigure service (changes will be applied immediately)
+            //BackgroundGeolocation.configure({ debug: true });
+        });
+        
+        BackgroundGeolocation.on('foreground', function() {
+            //console.log('[INFO] App is in foreground');
+
+            //BackgroundGeolocation.configure({ debug: false });
+        });
+        
+        BackgroundGeolocation.checkStatus(function(status) {
+            //console.log('[INFO] BackgroundGeolocation service is running', status.isRunning);
+            //console.log('[INFO] BackgroundGeolocation services enabled', status.locationServicesEnabled);
+            //console.log('[INFO] BackgroundGeolocation auth status: ' + status.authorization);
+        });
+        
+        //
+        // backgound geolocation tracking : end
