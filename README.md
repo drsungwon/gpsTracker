@@ -72,6 +72,8 @@ https://github.com/mauron85/cordova-plugin-background-geolocation/가 유명하�
 "cordova plugin add https://github.com/katzer/cordova-plugin-background-mode"<br><br>
 ## 소프트웨어 개선 문의
 수업에서 위치 정보를 분석해야 하는 용도를 위하여 만들어진 간단한 프로그램입니다.<br>
+추가적인 복잡한 기능의 개발과 추가는 아직 계획이 없습니다.<br>
+스마트폰 앱의 특성상 다양한 환경에서 다양한 이슈가 있을 것으로 생각되며, 겪은 문제를 Issue에 올려주시면 최대한 개선해 보겠습니다.<br> 
 프로그램의 근본적인 부분에 대한 수정은 꾸준하게 진행할 예정이오니, Issue 기능을 활용하시면 지원하도록 하겠습니다.<br><br>
 ## 라이센스
 APACHE LICENSE 2.0<br>
