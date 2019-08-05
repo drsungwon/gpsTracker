@@ -6,11 +6,13 @@ Apache Cordova를 기반으로 개발하여, HTML5/CSS3/Javascript를 개발도�
 Apache License 2.0 오픈소스 소프트웨어로 공개하니, 누구나 공부하고 확장할 수 있습니다.<br>
 ## 프로그램 사용 방법
 소스코드를 다운받아 빌드하지 않아도, 다음의 방법으로 이미 만들어진(build된) 프로그램을 사용할 수 있습니다.<br>
-#### Android 스마트폰
+#### 프로그램 기능 설명
+(1)
+#### Android 스마트폰에 설치하기
 추후 업데이트 합니다.<br>
-#### IOS 스마트폰
+#### IOS 스마트폰에 설치하기
 추후 업데이트 합니다.<br>
-#### 웹브라우저
+#### 웹브라우저에서 실행하기
 기본적으로 아래에서 설명할 background 모드 플러그인을 제외하고는 모든 기능을 웹브라우저에서도 실행할 수 있습니다.<br>
 웹브라우저에서의 동작을 위해서는 소스코드의 다운로드 및 "cordova run browser"를 통한 실행이 필요합니다.<br>
 ## 소스코드 활용 방법
@@ -41,3 +43,6 @@ https://github.com/mauron85/cordova-plugin-background-geolocation/가 유명하�
 본 plugin은 2019년 8월 기준 안정적인 background 모드에서의 위치 정보 수집 기능을 지원합니다.<br>
 다음의 설치 명령으로 cordova에 추가할 수 있습니다.<br>
 "cordova plugin add https://github.com/katzer/cordova-plugin-background-mode"<br>
+## 라이센스
+APACHE LICENSE 2.0<br>
+Copyright 2019, Sungwon Lee @ KHU
