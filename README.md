@@ -72,10 +72,10 @@ https://cordova.apache.org/docs/en/latest/guide/platforms/ios/index.html<br><br>
 소스코드를 이해하기 위해서는 다음 프로그램을 설치하고 사용할 줄 알아야 합니다.<br>
 소스코드의 수정을 위해서는 HTML5, CSS3, Javascript ES5에 대한 이해와 경험이 필요합니다.<br> 
 www 디렉토리 안에 있는 화일들 중 jquery 화일을 제외한 화일들이 개발된 소스코드들 입니다.<br>
-refernece 디렉토리 안에는 background mode 동작을 위하여 사용한 플러그인 인 <br>
-platanus/cordova-plugin-background-mode 소스코드와,<br>
-maurun85의 background geolocation 소스코드, websocket 등 개발시 시도했던 코드들을 공부에 참조삼아 담고 있습니다.<br>
-build 디렉토리 안에는 다운받아서 설치할 수 있는 실행 프로그램을 담고 있습니다.<br><br>
+refernece 디렉토리는 개발중 참조 혹은 첨삭한 코드들로, background mode 동작을 위하여 사용한 플러그인 인 <br>
+platanus/cordova-plugin-background-mode와 katzer의 소스코드,<br>
+websocket 등 개발시 시도했던 코드들을 공부할 사람들을 위한 용도로 담고 있습니다.<br>
+build 디렉토리 안에는 다운받아서 설치할 수 있는 Android용 실행 프로그램을 담고 있습니다.<br><br>
 ### Apache Cordova
 https://cordova.apache.org/<br>
 Apache 재단에서 관리하는 WepApp 개발도구로써, PhoneGap/Ionic의 기반 기술로 사용됩니다.<br>
