@@ -44,6 +44,7 @@ build 디렉토리안의 android 디렉토리에서 apk 확장자의 화일을 �
 앞서 스마트폰으로 저장한 프로그램(프로그램 이름이 "뚜벅뚜벅"인 아이콘)을 찾습니다.<br>
 스마트폰으로 이동한 프로그램을 클릭하여 실행합니다.<br>
 프로그램이 설치되는 작업이 시작되면서, 사용자에게 설치를 할 것인지에 대한 의사 등을 확인할때 모두 동의하여 설치합니다.<br>
+특히 앱스토어를 경유하지 않은 프로그램인데 설치를 권하지 않는 단추에서 "확인"을 누르시지말고, 설치에 동의해야 합니다.<br>
 정상적으로 프로그램이 설치되면, 일반 앱스토어를 통해서 다운로드한 프로그램 처럼 실행합니다.<br>
 절차 방법에 대한 상세한 설명은 다음의 사이트와 같이 인터넷 검색을 통해서 쉽게 찾아 볼수 있습니다.<br>
 https://m.blog.naver.com/imagine0716/220921097859<br><br>
@@ -56,7 +57,8 @@ https://m.blog.naver.com/imagine0716/220921097859<br><br>
 소스코드를 이해하기 위해서는 다음 프로그램을 설치하고 사용할 줄 알아야 합니다.<br>
 소스코드의 수정을 위해서는 HTML5, CSS3, Javascript ES5에 대한 이해와 경험이 필요합니다.<br> 
 www 디렉토리 안에 있는 화일들 중 jquery 화일을 제외한 화일들이 개발된 소스코드들 입니다.<br>
-refernece 디렉토리 안에는 katzer/cordova-plugin-background-mode 소스코드,<br>
+refernece 디렉토리 안에는 background mode 동작을 위하여 사용한 플러그인인 <br>
+platanus/cordova-plugin-background-mode 소스코드와,<br>
 maurun85의 background geolocation, websocket 등 개발시 시도했던 코드들을 공부에 참조삼아 담고 있습니다.<br>
 build 디렉토리 안에는 다운받아서 설치할 수 있는 실행 프로그램을 담고 있습니다.<br><br>
 ### Apache Cordova
@@ -74,7 +76,7 @@ Node.js(https://nodejs.org/ko/)와 npm(https://www.npmjs.com/)를 사용하여 �
 https://cordova.apache.org/docs/en/latest/reference/cordova-plugin-geolocation/<br>
 사용자의 위치정보(GPS 등)을 확인할 수 있습니다.<br><br>
 ### Cordova Plugin : katzer/cordova-plugin-background-mode
-https://github.com/katzer/cordova-plugin-background-mode<br>
+https://github.com/platanus/cordova-plugin-background-mode<br>
 스마트폰은 응용 프로그램이 background 모드로 진입하는 경우, 배터리 절약을 위하여 일정 시간이 지나면 프로그램을 중지합니다.<br>
 배터리 절약을 위해서는 좋지만, gpsTracker와 같이 지속적인 위치를 측정하거나 채팅 등을 하는 프로그램엔 문제가 발생합니다.<br>
 이 프로그램의 월활한 수행을 위해서, 스마트폰 배터리 최적화 기능을 잠시 꺼두는 것이 좋습니다.<br>
@@ -82,8 +84,9 @@ https://dontkillmyapp.com/에서 더 많은 정보를 스마트폰 제조사 및
 이 plugin은 WebApp이 background 모드로 진입하더라도 동작이 가능하도록 지원합니다.<br>
 https://github.com/mauron85/cordova-plugin-background-geolocation/가 유명하지만 상용화 이후 개선이 잘 안되는 점에서,<br>
 본 plugin은 2019년 8월 기준 안정적인 background 모드에서의 위치 정보 수집 기능을 지원합니다.<br>
+당초 katzer의 플러그인을 사용했지만 IOS 버전에서 일부 오류가 있어서 platanus로 변경했습니다.<br>
 다음의 설치 명령으로 cordova에 추가할 수 있습니다.<br>
-"cordova plugin add https://github.com/katzer/cordova-plugin-background-mode"<br><br>
+"cordova plugin add https://github.com/platanus/cordova-plugin-background-mode"<br><br>
 ## 소프트웨어 개선 문의
 수업에서 위치 정보를 분석해야 하는 용도를 위하여 만들어진 간단한 프로그램입니다.<br>
 추가적인 복잡한 기능의 개발과 추가는 아직 계획이 없습니다.<br>
