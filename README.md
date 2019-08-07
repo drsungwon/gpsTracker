@@ -103,6 +103,29 @@ https://github.com/mauron85/cordova-plugin-background-geolocation/가 유명하�
 platanus plugin은 katzer plugin의 일부 수정 버전으로 공지되어 있습니다.<br>
 다음의 설치 명령으로 cordova에 추가할 수 있습니다.<br>
 "cordova plugin add https://github.com/platanus/cordova-plugin-background-mode.git"<br><br>
+## QUICK SUMMARY
+(1) Node.js 설치<br>
+     https://nodejs.org/ko/<br>
+(2) npm 설치<br>
+     https://www.npmjs.com/<br>
+(3) Cordova 설치<br>
+     https://cordova.apache.org/<br>
+(4) Cordova Android 개발 환경 설치<br>
+     https://cordova.apache.org/docs/en/latest/guide/platforms/android/index.html<br>
+(5) Cordova iOS 개발 환경 설치<br>
+     https://cordova.apache.org/docs/en/latest/guide/platforms/ios/index.html<br>
+(6) Cordova Deafult 프로젝트 (Hello Cordova Proejct) 생성<br>
+     https://cordova.apache.org/docs/en/latest/guide/cli/index.html<br>
+(7) 본 오픈소스의 config.xml과 www 및  디렉토리 안의 화일로 Default 프로젝트 화일 대체 (jquery 포함)<br>
+(8) Geolocation plugin 설치<br>
+     https://cordova.apache.org/docs/en/latest/reference/cordova-plugin-geolocation/index.html<br>
+(9) platanus-background-mode plugin 설치<br>
+     https://github.com/platanus/cordova-plugin-background-mode<br>
+(10) Browser platform에서의 기본 기능 확인 (Background mode 동작 안함)<br>
+(11) Android에서의 기능 확인 (apk 화일 생성후, USB로 스마트폰 이동 & 설치)<br>
+(12) iOS에서의 기능 확인 (Xcode로 app 화일 생성후, USB로 스마트폰 이동 & 설치)<br>
+(13) 실제 위치 정보 측정 (스마트폰의 절전 기능 off, 알약 등 절전 소프트웨어의 절전 기능 off 권장)<br>
+     https://dontkillmyapp.com/<br><br>
 ## 소프트웨어 개선 문의
 수업에서 위치 정보를 분석해야 하는 용도를 위하여 만들어진 간단한 프로그램입니다.<br>
 추가적인 복잡한 기능의 개발과 추가는 아직 계획이 없습니다.<br>
