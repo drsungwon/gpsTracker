@@ -2,12 +2,12 @@
 GPS Tracking Application using Apache Cordova<br><br>
 ## 프로그램 소개
 경희대학교 소프트웨어융합학과 학부생 수업에서 사용자의 위치를 분석하는 실습을 지원하기 위하여 만들어진 프로그램입니다.<br>
-Apache Cordova를 기반으로 개발하여, HTML5/CSS3/Javascript를 개발도구로 활용합니다.<br>
+Apache Cordova를 기반으로 개발하여, HTML5/CSS3/Javascript를 개발도구로 사용합니다.<br>
 Apache License 2.0 오픈소스 소프트웨어로 공개하니, 누구나 공부하고 확장할 수 있습니다.<br><br>
 ## 프로그램 사용 방법
-소스코드를 다운받아 빌드하지 않아도, 다음의 방법으로 이미 만들어진(build된) 프로그램을 사용할 수 있습니다.<br><br>
+소스코드를 다운받아 빌드하거나, 다음의 방법으로 이미 만들어진(build된) Android용 프로그램을 사용할 수 있습니다.<br><br>
 ### 프로그램 기능 설명
-프로그램은 단순하게 정보수집을 활성화/비활성화하고, 수집한 정보를 확인하는 것으로 단순화 되어 있습니다.<br>
+프로그램은 위치 정보 수집을 활성화/비활성화하고, 수집한 정보를 확인하는 것으로 단순화 되어 있습니다.<br>
 메인 메뉴에서 선택을 하신후, 서브 메뉴에서 다시 메인 메뉴로 이동하실 때에는, 화면 위 왼쪽의 '홈' 버튼을 누르시면 됩니다.<br><br>
 #### (1) 프로그램 설정
 정보수집 활성화 기능을 활성화/비활성화 하는 버튼입니다.<br>
@@ -26,20 +26,23 @@ Apache License 2.0 오픈소스 소프트웨어로 공개하니, 누구나 공�
 프로그램에 대한 간단한 소개와 개발자 정보, 그리고 수집하는 위치정보가 어떤 것인지 설명합니다.<br>
 그리고 활용한 오픈소스 소프트웨어들에 대한 정보 및 이에 대한 라이센스 공지를 확인할 수 있습니다.<br><br>
 ### 사용시 주의사항
-스마트폰은 배터리 사용량을 최적화 하기 위하여, 화면을 사용하지 않는 프로그램(background process)의 사용을 매우 제약합니다.<br>
-이 프로그램의 경우도 화면이 꺼진 동안에도 사용자의 위치를 확인하기에 많은 제약을 운영체제에게서 받습니다.<br>
-운영체제가 제약을 하는 경우는 화면이 꺼진 후, 일정 시간이 지나서 프로그램의 동작이 멈출 수 있습니다.<br>
+본 프로그램은 프로그램이 활성화되지 않은 background 모드에서도 위치 정보를 수집합니다.<br>
+Background 모드 동작은 직접 개발하지 않고, 오픈소스 플러그인을 사용합니다.<br>
+스마트폰은 배터리 사용량을 최적화 하기 위하여, 화면을 사용하지 않는 프로그램(background process)의 동작을 제한합니다.<br>
+이 프로그램의 경우도 화면이 꺼진 동안, 사용자의 위치를 확인하기에 많은 제약을 운영체제에게서 받습니다.<br>
+운영체제가 제약을 하는 경우는, 화면이 꺼진 후, 일정 시간이 지나서 프로그램의 동작이 멈추게 합니다.<br>
 따라서 본 프로그램은 시작하는 시점에 사용자의 위치 정보 획득에 대한 허가를 사용자에게 요청함과 동시에,<br>
-배터리를 최적화 하는 운영체제의 기능을 일부 멈추도록 하는 것에 대한 사용자의 동의를 구합니다.<br>
+Background 모드에서의 동작을 위해, 배터리 최적화 기능을 일부 멈추도록 하는 것에 대한 사용자의 동의를 구합니다.<br>
 특히, 원활한 정보수집을 위해서, 본 프로그램을 사용하는 동안에는 스마트폰의 배터리 최적화를 잠시 꺼두시기를 권장합니다.<br>
 이에 대한 자세한 정보는 아래 오픈소스 설명에 나타난 https://dontkillmyapp.com/를 참조하시기 바랍니다.<br>
 삼성전자 갤럭시S 노트9을 예를 들면, "설정 - 디바이스 케어 - 배터리 - 설정"에서,<br>
 "사용하지 않는 앱을 절전 상태로 전환"과 "미사용 앱 자동으로 사용해제"를 잠시 꺼두시기를 권장합니다.<br>
 실험 결과 베터리 최적화를 제거한 화웨이 단말에서는 24시간 이상의 테스트에 전혀 문제가 없지만,<br>
-삼성전자 갤럭시S 노트9에서는 새벽1시를 기점으로 프로그램이 멈추는 증상 등이 나타나기는 합니다.<br>
+삼성전자 갤럭시S 노트9에서는 주로 새벽에 프로그램이 멈추거나 지연하여 동작하는 증상이 나타나곤 합니다.<br>
 이는 삼성전자 스마트폰에서 배터리 제어를 위한 노력을 더 하는 것으로 파악되기에 참조바랍니다.<br>
+iOS의 경우는 특별한 이상 동작이 발생하지 않는 것으로 실험에서 나타났습니다.<br>
 본 프로그램에서는 background mode는 아래 설명할 플러그인을 활용할 뿐,<br>
-추가적인 작업은 더 하지 않기에, 이에 대한 일부 불만족은 감수하여 주시거나 본 소스코드에서 개량하여 주시면 좋겠습니다. ^^<br>
+추가적인 작업은 더 하지 않기에, 이에 대한 일부 불만족은 감수하여 주시거나 관련 오픈소스를 직접 개량하면 좋겠습니다. ^^<br>
 스마트폰에서 background mode에서 동작하는 기술은 별도 회사들이 있을 만큼 주요한 기술입니다.<br><br>
 ### Android 스마트폰에 설치하기
 build 디렉토리안의 android 디렉토리에서 apk 확장자의 화일을 다운로드 합니다.<br>
@@ -55,13 +58,13 @@ build 디렉토리안의 android 디렉토리에서 apk 확장자의 화일을 �
 절차 방법에 대한 상세한 설명은 다음의 사이트와 같이 인터넷 검색을 통해서 쉽게 찾아 볼수 있습니다.<br>
 https://m.blog.naver.com/imagine0716/220921097859<br><br>
 ### IOS 스마트폰에 설치하기
-현재 iPhone에서의 동작은 검증을 하였습니다.<br>
-본인이 Mac 컴퓨터를 가지고 있으며, Xcode와 Cordova에 대한 이해가 있는 경우, 아래를 참조하여 설치 가능합니다.<br>
+현재 iPhone에서의 동작은 검증을 하였으나, 배포는 녹록하지 않습니다.<br>
+iOS 프로그램을 개발자가 다른 사용자에 배포하려면, 애플에 개발자 등록을 하고(비용 필요 ^^) 애플을 통해서 배포해야 합니다.<br>
+본 프로그램은 오픈소스 공개를 목표로 하기에, 이런 부분까지 진행하지는 않습니다.<br>
+따라서, 소스코드를 가지고 직접 어플리케이션을 빌드하여, 본인의 iphone으로 설치하는 방법을 설명합니다.<br>
+본인이 Mac 컴퓨터를 가지고 있으며, Xcode와 Cordova에 대한 이해가 있는 경우, 아래를 참조하여 설치 가능합니다.<br><br>
 Mac 컴퓨터에서 Cordova 개발 환경을 설치하고, 실제 아이폰 단말에서 실행 & 디버그 하는 방법.<br>
-https://cordova.apache.org/docs/en/latest/guide/platforms/ios/index.html<br>
-단순히 아이폰만 있거나 개발환경에 대한 이해없이 설치&사용만 원하는 경우를 위하여,<br>
-Apple의 testflight를 통한 배포를 검토 중입니다.<br>
-정리가 되는대로 공지하도록 하겠습니다.<br><br>
+https://cordova.apache.org/docs/en/latest/guide/platforms/ios/index.html<br><br>
 ### 웹브라우저에서 실행하기
 기본적으로 아래에서 설명할 background 모드 플러그인을 제외하고는 모든 기능을 웹브라우저에서도 실행할 수 있습니다.<br>
 웹브라우저에서의 동작을 위해서는 소스코드의 다운로드 및 "cordova run browser"를 통한 실행이 필요합니다.<br><br>
@@ -69,9 +72,9 @@ Apple의 testflight를 통한 배포를 검토 중입니다.<br>
 소스코드를 이해하기 위해서는 다음 프로그램을 설치하고 사용할 줄 알아야 합니다.<br>
 소스코드의 수정을 위해서는 HTML5, CSS3, Javascript ES5에 대한 이해와 경험이 필요합니다.<br> 
 www 디렉토리 안에 있는 화일들 중 jquery 화일을 제외한 화일들이 개발된 소스코드들 입니다.<br>
-refernece 디렉토리 안에는 background mode 동작을 위하여 사용한 플러그인인 <br>
+refernece 디렉토리 안에는 background mode 동작을 위하여 사용한 플러그인 인 <br>
 platanus/cordova-plugin-background-mode 소스코드와,<br>
-maurun85의 background geolocation, websocket 등 개발시 시도했던 코드들을 공부에 참조삼아 담고 있습니다.<br>
+maurun85의 background geolocation 소스코드, websocket 등 개발시 시도했던 코드들을 공부에 참조삼아 담고 있습니다.<br>
 build 디렉토리 안에는 다운받아서 설치할 수 있는 실행 프로그램을 담고 있습니다.<br><br>
 ### Apache Cordova
 https://cordova.apache.org/<br>
@@ -87,18 +90,19 @@ Node.js(https://nodejs.org/ko/)와 npm(https://www.npmjs.com/)를 사용하여 �
 ### Cordova Plugin : cordova-plugin-geolocation
 https://cordova.apache.org/docs/en/latest/reference/cordova-plugin-geolocation/<br>
 사용자의 위치정보(GPS 등)을 확인할 수 있습니다.<br><br>
-### Cordova Plugin : katzer/cordova-plugin-background-mode
+### Cordova Plugin : platanus/cordova-plugin-background-mode
 https://github.com/platanus/cordova-plugin-background-mode<br>
 스마트폰은 응용 프로그램이 background 모드로 진입하는 경우, 배터리 절약을 위하여 일정 시간이 지나면 프로그램을 중지합니다.<br>
 배터리 절약을 위해서는 좋지만, gpsTracker와 같이 지속적인 위치를 측정하거나 채팅 등을 하는 프로그램엔 문제가 발생합니다.<br>
 이 프로그램의 월활한 수행을 위해서, 스마트폰 배터리 최적화 기능을 잠시 꺼두는 것이 좋습니다.<br>
 https://dontkillmyapp.com/에서 더 많은 정보를 스마트폰 제조사 및 모델별로 확인 가능합니다.<br>
 이 plugin은 WebApp이 background 모드로 진입하더라도 동작이 가능하도록 지원합니다.<br>
-https://github.com/mauron85/cordova-plugin-background-geolocation/가 유명하지만 상용화 이후 개선이 잘 안되는 점에서,<br>
-본 plugin은 2019년 8월 기준 안정적인 background 모드에서의 위치 정보 수집 기능을 지원합니다.<br>
-당초 katzer의 플러그인을 사용했지만 IOS 버전에서 일부 오류가 있어서 platanus로 변경했습니다.<br>
+https://github.com/mauron85/cordova-plugin-background-geolocation/가 유명하지만 최근 개선이 잘 안됩니다.<br>
+하지만 platanus plugin은 2019년 8월 기준 안정적인 background 모드에서의 위치 정보 수집 기능을 지원합니다.<br>
+당초 katzer의 플러그인을 사용했지만 iOS 버전에서 일부 오류가 있어서 platanus로 변경했습니다.<br>
+platanus plugin은 katzer plugin의 일부 수정 버전으로 공지되어 있습니다.<br>
 다음의 설치 명령으로 cordova에 추가할 수 있습니다.<br>
-"cordova plugin add https://github.com/platanus/cordova-plugin-background-mode"<br><br>
+"cordova plugin add https://github.com/platanus/cordova-plugin-background-mode.git"<br><br>
 ## 소프트웨어 개선 문의
 수업에서 위치 정보를 분석해야 하는 용도를 위하여 만들어진 간단한 프로그램입니다.<br>
 추가적인 복잡한 기능의 개발과 추가는 아직 계획이 없습니다.<br>
