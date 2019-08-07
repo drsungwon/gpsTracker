@@ -66,6 +66,9 @@ iOS 프로그램을 개발자가 다른 사용자에 배포하려면, 애플에 
 본인이 Mac 컴퓨터를 가지고 있으며, Xcode와 Cordova에 대한 이해가 있는 경우, 아래를 참조하여 설치 가능합니다.<br><br>
 Mac 컴퓨터에서 Cordova 개발 환경을 설치하고, 실제 아이폰 단말에서 실행 & 디버그 하는 방법.<br>
 https://cordova.apache.org/docs/en/latest/guide/platforms/ios/index.html<br><br>
+참고로 애플 개발자 등록 및 개발용 프로그램 배포에 대한 TestFlight 프로그램은 다음을 참조하세요.<br>
+https://developer.apple.com/kr/programs/enterprise/<br>
+https://developer.apple.com/kr/testflight/<br><br>
 ### 웹브라우저에서 실행하기
 기본적으로 아래에서 설명할 background 모드 플러그인을 제외하고는 모든 기능을 웹브라우저에서도 실행할 수 있습니다.<br>
 웹브라우저에서의 동작을 위해서는 소스코드의 다운로드 및 "cordova run browser"를 통한 실행이 필요합니다.<br><br>
