@@ -110,4 +110,4 @@ platanus plugin은 katzer plugin의 일부 수정 버전으로 공지되어 있�
 프로그램의 근본적인 부분에 대한 수정은 꾸준하게 진행할 예정이오니, Issue 기능을 활용하시면 지원하도록 하겠습니다.<br><br>
 ## 라이센스
 APACHE LICENSE 2.0<br>
-Copyright 2019, Sungwon Lee @ KHU
+Copyright 2019, Dr.Sungwon @ KHU
