@@ -122,9 +122,12 @@ platanus plugin은 katzer plugin의 일부 수정 버전으로 공지되어 있�
 (9) platanus-background-mode plugin 설치<br>
      https://github.com/platanus/cordova-plugin-background-mode<br>
 (10) Browser platform에서의 기본 기능 확인 (Background mode 동작 안함)<br>
+     https://cordova.apache.org/<br>
 (11) Android에서의 기능 확인 (apk 화일 생성후, USB로 스마트폰 이동 & 설치)<br>
+     https://cordova.apache.org/docs/en/latest/guide/platforms/android/index.html<br>
 (12) iOS에서의 기능 확인 (Xcode로 app 화일 생성후, USB로 스마트폰 이동 & 설치)<br>
-(13) 실제 위치 정보 측정 (스마트폰의 절전 기능 off, 알약 등 절전 소프트웨어의 절전 기능 off 권장)<br>
+     https://cordova.apache.org/docs/en/latest/guide/platforms/ios/index.html<br>
+(13) 스마트폰 절전 모드 조절 및 실제 위치 정보 측정 (스마트폰의 절전 기능 off, 알약 등 절전 소프트웨어의 절전 기능 off 권장)<br>
      https://dontkillmyapp.com/<br><br>
 ## 소프트웨어 개선 문의
 수업에서 위치 정보를 분석해야 하는 용도를 위하여 만들어진 간단한 프로그램입니다.<br>
