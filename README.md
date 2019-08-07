@@ -1,6 +1,6 @@
 # gpsTracker [뚜벅뚜벅]
-## 프로그램 소개
 GPS Tracking Application using Apache Cordova<br><br>
+## 프로그램 소개
 경희대학교 소프트웨어융합학과 학부생 수업에서 사용자의 위치를 분석하는 실습을 지원하기 위하여 만들어진 프로그램입니다.<br>
 Apache Cordova를 기반으로 개발하여, HTML5/CSS3/Javascript를 개발도구로 활용합니다.<br>
 Apache License 2.0 오픈소스 소프트웨어로 공개하니, 누구나 공부하고 확장할 수 있습니다.<br><br>
@@ -20,6 +20,7 @@ Apache License 2.0 오픈소스 소프트웨어로 공개하니, 누구나 공�
 본 프로그램은 개인정보 보호에 대한 차원에서 스마트폰 밖으로 수집한 정보를 전송하지 않습니다.<br>
 따라서 화면에 표시한 수집정보를 사용법에 맞춰서 copy & paste 후 활용하시면 됩니다.<br>
 개인 정보를 별도의 서버나 이메일로 전송하지 않으니 안심하고 사용하시면 됩니다.<br>
+프로그램에서 설명한 방법으로 csv 화일을 만들면, 엑셀 등의 스프레드 시트에서 컬럼이 쉼표(,)로 구분된 형태로 읽어들이면 됩니다.<br>
 수정정보 삭제하기 버튼을 누르면, 수집한 정보를 프로그램에서 모두 지웁니다.<br><br>
 #### (3) 프로그램 설명
 프로그램에 대한 간단한 소개와 개발자 정보, 그리고 수집하는 위치정보가 어떤 것인지 설명합니다.<br>
@@ -33,18 +34,45 @@ Apache License 2.0 오픈소스 소프트웨어로 공개하니, 누구나 공�
 특히, 원활한 정보수집을 위해서, 본 프로그램을 사용하는 동안에는 스마트폰의 배터리 최적화를 잠시 꺼두시기를 권장합니다.<br>
 이에 대한 자세한 정보는 아래 오픈소스 설명에 나타난 https://dontkillmyapp.com/를 참조하시기 바랍니다.<br>
 삼성전자 갤럭시S 노트9을 예를 들면, "설정 - 디바이스 케어 - 배터리 - 설정"에서,<br>
-"사용하지 않는 앱을 절전 상태로 전환"과 "미사용 앱 자동으로 사용해제"를 잠시 꺼두시기를 권장합니다.<br><br>
+"사용하지 않는 앱을 절전 상태로 전환"과 "미사용 앱 자동으로 사용해제"를 잠시 꺼두시기를 권장합니다.<br>
+실험 결과 베터리 최적화를 제거한 화웨이 단말에서는 24시간 이상의 테스트에 전혀 문제가 없지만,<br>
+삼성전자 갤럭시S 노트9에서는 새벽1시를 기점으로 프로그램이 멈추는 증상 등이 나타나기는 합니다.<br>
+이는 삼성전자 스마트폰에서 배터리 제어를 위한 노력을 더 하는 것으로 파악되기에 참조바랍니다.<br>
+본 프로그램에서는 background mode는 아래 설명할 플러그인을 활용할 뿐,<br>
+추가적인 작업은 더 하지 않기에, 이에 대한 일부 불만족은 감수하여 주시거나 본 소스코드에서 개량하여 주시면 좋겠습니다. ^^<br>
+스마트폰에서 background mode에서 동작하는 기술은 별도 회사들이 있을 만큼 주요한 기술입니다.<br><br>
 ### Android 스마트폰에 설치하기
-추후 업데이트 합니다.<br><br>
+build 디렉토리안의 android 디렉토리에서 apk 확장자의 화일을 다운로드 합니다.<br>
+다운로드한 프로그램이 있는 컴퓨터와 스마트폰을 usb 케이블로 연결하고, 스마트폰에서 화일전송 모드로 설정합니다.<br>
+다운로드한 프로그램을 컴퓨터에서 스마트폰으로 전송합니다.<br>
+처음 해보는 사람은 https://support.google.com/android/answer/9064445?hl=ko 사이트를 참조합니다.<br>
+스마트폰에 저장된 화일을 검색할 수 있는 프로그램(삼성전자 갤럭시의 경우는 "내 파일" 프로그램)을 실행한 후,<br>
+앞서 스마트폰으로 저장한 프로그램(프로그램 이름이 "뚜벅뚜벅"인 아이콘)을 찾습니다.<br>
+스마트폰으로 이동한 프로그램을 클릭하여 실행합니다.<br>
+프로그램이 설치되는 작업이 시작되면서, 사용자에게 설치를 할 것인지에 대한 의사 등을 확인할때 모두 동의하여 설치합니다.<br>
+특히 앱스토어를 경유하지 않은 프로그램인데 설치를 권하지 않는 단추에서 "확인"을 누르시지말고, 설치에 동의해야 합니다.<br>
+정상적으로 프로그램이 설치되면, 일반 앱스토어를 통해서 다운로드한 프로그램 처럼 실행합니다.<br>
+절차 방법에 대한 상세한 설명은 다음의 사이트와 같이 인터넷 검색을 통해서 쉽게 찾아 볼수 있습니다.<br>
+https://m.blog.naver.com/imagine0716/220921097859<br><br>
 ### IOS 스마트폰에 설치하기
-추후 업데이트 합니다.<br><br>
+현재 iPhone에서의 동작은 검증을 하였습니다.<br>
+본인이 Mac 컴퓨터를 가지고 있으며, Xcode와 Cordova에 대한 이해가 있는 경우, 아래를 참조하여 설치 가능합니다.<br>
+Mac 컴퓨터에서 Cordova 개발 환경을 설치하고, 실제 아이폰 단말에서 실행 & 디버그 하는 방법.<br>
+https://cordova.apache.org/docs/en/latest/guide/platforms/ios/index.html<br>
+단순히 아이폰만 있거나 개발환경에 대한 이해없이 설치&사용만 원하는 경우를 위하여,<br>
+Apple의 testflight를 통한 배포를 검토 중입니다.<br>
+정리가 되는대로 공지하도록 하겠습니다.<br><br>
 ### 웹브라우저에서 실행하기
 기본적으로 아래에서 설명할 background 모드 플러그인을 제외하고는 모든 기능을 웹브라우저에서도 실행할 수 있습니다.<br>
 웹브라우저에서의 동작을 위해서는 소스코드의 다운로드 및 "cordova run browser"를 통한 실행이 필요합니다.<br><br>
 ## 소스코드 활용 방법
 소스코드를 이해하기 위해서는 다음 프로그램을 설치하고 사용할 줄 알아야 합니다.<br>
 소스코드의 수정을 위해서는 HTML5, CSS3, Javascript ES5에 대한 이해와 경험이 필요합니다.<br> 
-www 디렉토리 안에 있는 화일들 중 jquery 화일을 제외한 화일들이 개발된 소스코드들 입니다.<br> <br>
+www 디렉토리 안에 있는 화일들 중 jquery 화일을 제외한 화일들이 개발된 소스코드들 입니다.<br>
+refernece 디렉토리 안에는 background mode 동작을 위하여 사용한 플러그인인 <br>
+platanus/cordova-plugin-background-mode 소스코드와,<br>
+maurun85의 background geolocation, websocket 등 개발시 시도했던 코드들을 공부에 참조삼아 담고 있습니다.<br>
+build 디렉토리 안에는 다운받아서 설치할 수 있는 실행 프로그램을 담고 있습니다.<br><br>
 ### Apache Cordova
 https://cordova.apache.org/<br>
 Apache 재단에서 관리하는 WepApp 개발도구로써, PhoneGap/Ionic의 기반 기술로 사용됩니다.<br>
@@ -60,7 +88,7 @@ Node.js(https://nodejs.org/ko/)와 npm(https://www.npmjs.com/)를 사용하여 �
 https://cordova.apache.org/docs/en/latest/reference/cordova-plugin-geolocation/<br>
 사용자의 위치정보(GPS 등)을 확인할 수 있습니다.<br><br>
 ### Cordova Plugin : katzer/cordova-plugin-background-mode
-https://github.com/katzer/cordova-plugin-background-mode<br>
+https://github.com/platanus/cordova-plugin-background-mode<br>
 스마트폰은 응용 프로그램이 background 모드로 진입하는 경우, 배터리 절약을 위하여 일정 시간이 지나면 프로그램을 중지합니다.<br>
 배터리 절약을 위해서는 좋지만, gpsTracker와 같이 지속적인 위치를 측정하거나 채팅 등을 하는 프로그램엔 문제가 발생합니다.<br>
 이 프로그램의 월활한 수행을 위해서, 스마트폰 배터리 최적화 기능을 잠시 꺼두는 것이 좋습니다.<br>
@@ -68,8 +96,9 @@ https://dontkillmyapp.com/에서 더 많은 정보를 스마트폰 제조사 및
 이 plugin은 WebApp이 background 모드로 진입하더라도 동작이 가능하도록 지원합니다.<br>
 https://github.com/mauron85/cordova-plugin-background-geolocation/가 유명하지만 상용화 이후 개선이 잘 안되는 점에서,<br>
 본 plugin은 2019년 8월 기준 안정적인 background 모드에서의 위치 정보 수집 기능을 지원합니다.<br>
+당초 katzer의 플러그인을 사용했지만 IOS 버전에서 일부 오류가 있어서 platanus로 변경했습니다.<br>
 다음의 설치 명령으로 cordova에 추가할 수 있습니다.<br>
-"cordova plugin add https://github.com/katzer/cordova-plugin-background-mode"<br><br>
+"cordova plugin add https://github.com/platanus/cordova-plugin-background-mode"<br><br>
 ## 소프트웨어 개선 문의
 수업에서 위치 정보를 분석해야 하는 용도를 위하여 만들어진 간단한 프로그램입니다.<br>
 추가적인 복잡한 기능의 개발과 추가는 아직 계획이 없습니다.<br>
