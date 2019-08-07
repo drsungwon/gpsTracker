@@ -116,7 +116,7 @@ platanus plugin은 katzer plugin의 일부 수정 버전으로 공지되어 있�
      https://cordova.apache.org/docs/en/latest/guide/platforms/ios/index.html<br>
 (6) Cordova Deafult 프로젝트 (Hello Cordova Proejct) 생성<br>
      https://cordova.apache.org/docs/en/latest/guide/cli/index.html<br>
-(7) 본 오픈소스의 config.xml과 www 및  디렉토리 안의 화일로 Default 프로젝트 화일 대체 (jquery 포함)<br>
+(7) 본 오픈소스의 config.xml과 www 디렉토리 안의 화일로 Default 프로젝트 화일 대체 (jquery 디렉토리 화일 추가 포함)<br>
 (8) Geolocation plugin 설치<br>
      https://cordova.apache.org/docs/en/latest/reference/cordova-plugin-geolocation/index.html<br>
 (9) platanus-background-mode plugin 설치<br>
