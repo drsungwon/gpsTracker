@@ -121,7 +121,7 @@ var app = {
         };
 
         var trackingHandlerReset = function () {
-            trackingHandler = 0;
+            backgroundModuleHandler = 0;
         };
 
         cordova.plugins.backgroundMode.on('enable', function(){
